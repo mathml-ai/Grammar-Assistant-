@@ -12,10 +12,7 @@ This repository contains a fine-tuned LLM (Large Language Model) for various NLP
 - [Installation](#installation)
 - [Fine-tuning Process](#fine-tuning-process)
 - [Saving and Uploading the Model](#saving-and-uploading-the-model)
-- [Deployment as Web API](#deployment-as-web-api)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
+
 
 ## Installation
 Clone this repository and install the dependencies:
@@ -78,47 +75,6 @@ huggingface-cli login
 huggingface-cli upload ./fine_tuned_model --repo your-repo-name
 ```
 
-## Deployment as Web API
-To deploy the model as an API using FastAPI:
 
-1. Create `app.py`:
-```python
-from fastapi import FastAPI
-from transformers import AutoModelForCausalLM, AutoTokenizer
-import torch
-
-app = FastAPI()
-model_name = "your-huggingface-repo"
-model = AutoModelForCausalLM.from_pretrained(model_name)
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-
-def generate_output(prompt):
-    inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
-    outputs = model.generate(**inputs, max_new_tokens=64)
-    return tokenizer.decode(outputs[0], skip_special_tokens=True)
-
-@app.post("/generate")
-async def generate_text(data: dict):
-    prompt = data.get("prompt")
-    response = generate_output(prompt)
-    return {"output": response}
-```
-
-2. Run the API:
-```bash
-uvicorn app:app --host 0.0.0.0 --port 8000
-```
-
-## Usage
-To test the API, send a POST request:
-```bash
-curl -X POST "http://127.0.0.1:8000/generate" -H "Content-Type: application/json" -d '{"prompt": "Your input text here"}'
-```
-
-## Contributing
-Feel free to submit issues or pull requests if you find improvements or bugs.
-
-## License
-This project is licensed under the MIT License.
 
 
