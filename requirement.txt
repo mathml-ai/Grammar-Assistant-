@@ -1,0 +1,8 @@
+transformers
+trl
+unsloth
+torch
+fastapi
+uvicorn
+huggingface_hub
+pandas
